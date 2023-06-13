@@ -2,6 +2,7 @@ package com.example.miniproject_01;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,17 @@ public class UserAdapter extends BaseAdapter {
 
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
-        TextView userGender = convertView.findViewById(R.id.user_gender_tv);
+        TextView userId = convertView.findViewById(R.id.user_id_tv);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
-        userGender.setText(user.getGender());
+        userId.setText("#" + (position + 1));
 
+        if (user.getGender().equals("male")) {
+            convertView.setBackgroundColor(Color.parseColor("#5ED4E3"));
+        } else {
+            convertView.setBackgroundColor(Color.parseColor("#EF63CC"));
+        }
         return convertView;
     }
 }
