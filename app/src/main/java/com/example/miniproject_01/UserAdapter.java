@@ -20,7 +20,7 @@ public class UserAdapter extends BaseAdapter {
     ArrayList<UserModel> usersList ;
     Context context;
     private final int DURATION_OF_DOUBLE_CLICK = 250;
-    public UserAdapter( Context context , ArrayList<UserModel> usersList) {
+    public UserAdapter(Context context , ArrayList<UserModel> usersList) {
         this.usersList = usersList;
         this.context = context;
     }

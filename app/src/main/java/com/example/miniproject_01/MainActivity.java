@@ -2,9 +2,12 @@ package com.example.miniproject_01;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.miniproject_01.databinding.ActivityMainBinding;
@@ -23,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ActivityMainBinding bindingViews;
     View root;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(root);
 
         bindingViews.loadBtn.setOnClickListener(this);
-        bindingViews.quitBtn.setOnClickListener(this);
+        bindingViews.userSwipeTv.setOnTouchListener(new MyOnSwipeListener(this) {
+            @Override
+            public void swipeLeft() {
+                finish();
+            }
+        });
+        //region i try all the lines of code when the swipe didn't work
+        //        bindingViews.userSwipeTv.setOnClickListener(v -> {
+//            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+//        });
+//        TextView swipe = findViewById(R.id.user_swipe_tv);
+//
+//        swipe.setOnTouchListener(new MyOnSwipeListener(this) {
+//            @Override
+//            public void swipeLeft() {
+//                Log.e("TAG", "onFling: ");
+//                Toast.makeText(MainActivity.this, "enter here", Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        });
+        //endregion
     }
 
     @Override
