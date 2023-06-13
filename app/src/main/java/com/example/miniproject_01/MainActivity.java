@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 usersList.add(new UserModel(name.getString("first") , name.getString("last") , user.getString("gender"),
                 user.getString("city")));
             }
-//            Toast.makeText(this, fullName, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }

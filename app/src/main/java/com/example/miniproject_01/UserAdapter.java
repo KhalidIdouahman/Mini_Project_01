@@ -2,6 +2,8 @@ package com.example.miniproject_01;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,35 +50,35 @@ public class UserAdapter extends BaseAdapter {
 
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
-        ImageView userCheckImg = convertView.findViewById(R.id.user_check_im);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
 
-        convertView.setOnTouchListener(new View.OnTouchListener() {
-            long firstClick = 0;
+        View item = convertView;
+        convertView.setOnTouchListener(new MyOnSwipeListener(context) {
+
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-            //  This is just for if I want to work in multiple action
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_UP:
-//                        Toast.makeText(context, "action up", Toast.LENGTH_SHORT).show();
-//                        break;
-//                    case MotionEvent.ACTION_DOWN:
-//                        Toast.makeText(context, "action down", Toast.LENGTH_SHORT).show();
-//                        break;
-//            }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    long secondClick = System.currentTimeMillis();
+            public void swipeLeft() {
+                item.setBackgroundColor(Color.parseColor("#FF9F9F"));
+               AlertDialog.Builder alert = new AlertDialog.Builder(context);
+               alert.setTitle("Attention").setMessage("Do you want to remove this user ?")
+                       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               usersList.remove(position);
+                               notifyDataSetChanged();
+                               Toast.makeText(context, "User removed !!", Toast.LENGTH_SHORT).show();
+                               item.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-                    if ((secondClick - firstClick) <= DURATION_OF_DOUBLE_CLICK) {
-                       userCheckImg.setVisibility(userCheckImg.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
-                    } else {
-                        firstClick = secondClick;
-                    }
+                           }
+                       }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               Toast.makeText(context, "The process of removal this user has been canceled .", Toast.LENGTH_SHORT).show();
+                               item.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                           }
+                       }).show();
 
-                }
-                return true;
             }
         });
 

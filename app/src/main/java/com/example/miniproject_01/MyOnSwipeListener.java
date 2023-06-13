@@ -41,6 +41,7 @@ public class MyOnSwipeListener implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         myGestureDetector.onTouchEvent(event);
 //        this line is too important because when i make the line above in the return statement it doesn't work
+//        i think that onTouchEvent returns false ,but why i don't know .
         return true;
     }
 }
