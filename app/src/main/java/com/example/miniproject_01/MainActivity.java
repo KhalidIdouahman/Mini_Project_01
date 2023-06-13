@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.miniproject_01.databinding.ActivityMainBinding;
@@ -14,6 +15,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,29 +37,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == bindingViews.loadBtn.getId()) {
-            try {
-                InputStream inputStream = getAssets().open("users.json");
-                int code;
-                StringBuilder contentOfFile = new StringBuilder();
-
-                while ((code = inputStream.read()) != -1) {
-                    contentOfFile.append((char)code);
-                }
-
-                JSONObject mainObj = new JSONObject(contentOfFile.toString());
-                JSONArray users = mainObj.getJSONArray("users");
-                String fullName = "";
-                for (int i = 0; i < users.length(); i++) {
-                    JSONObject user = users.getJSONObject(i);
-                    JSONObject name = user.getJSONObject("name");
-                    fullName += String.format("%s %s \n" , name.get("first") , name.get("last"));
-                }
-                Toast.makeText(this, fullName, Toast.LENGTH_SHORT).show();
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            }
+            String data = getDataFromJson("users.json");
+            ArrayList<String> usersNames = getUsersFullNames(data);
+            ArrayAdapter<String> dataOfListView = new ArrayAdapter<>(this ,
+                    android.R.layout.simple_list_item_1 , usersNames);
+            bindingViews.usersListView.setAdapter(dataOfListView);
         } else  {
             finish();
         }
+    }
+
+    public String getDataFromJson(String fileName) {
+        StringBuilder contentOfFile = new StringBuilder();;
+        try {
+            InputStream inputStream = getAssets().open(fileName);
+            int code;
+            while ((code = inputStream.read()) != -1) {
+                contentOfFile.append((char)code);
+            }
+
+        } catch (IOException e ) {
+            e.printStackTrace();
+        }
+        return contentOfFile.toString();
+    }
+
+    public ArrayList<String> getUsersFullNames(String jsonContent) {
+        ArrayList<String> fullNamesList = new ArrayList<>();
+        try {
+            JSONObject mainObj = new JSONObject(jsonContent);
+            JSONArray users = mainObj.getJSONArray("users");
+            String fullName = "";
+            for (int i = 0; i < users.length(); i++) {
+                JSONObject user = users.getJSONObject(i);
+                JSONObject name = user.getJSONObject("name");
+                fullName = String.format("%s %s " , name.get("first") , name.get("last"));
+                fullNamesList.add(fullName);
+            }
+//            Toast.makeText(this, fullName, Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return fullNamesList;
     }
 }
