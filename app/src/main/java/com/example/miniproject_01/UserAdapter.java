@@ -2,11 +2,14 @@ package com.example.miniproject_01;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -46,15 +49,17 @@ public class UserAdapter extends BaseAdapter {
 
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
-        Button userDetails = convertView.findViewById(R.id.user_details_btn);
+        ImageView userDetails = convertView.findViewById(R.id.user_details_img_btn);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
         userDetails.setOnClickListener(v -> {
-            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-            alert.setTitle("Details of User " + (position + 1))
-                    .setMessage(user.toString())
-                    .show();
+            Intent intent = new Intent(context , DetailsUserActivity.class);
+            intent.putExtra("user_ft_name" , user.getFirstName());
+            intent.putExtra("user_lt_name" , user.getLastName());
+            intent.putExtra("user_gender" , user.getGender());
+            intent.putExtra("user_city" , user.getCity());
+            context.startActivity(intent);
         });
 
 
