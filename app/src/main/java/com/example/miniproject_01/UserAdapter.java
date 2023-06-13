@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.util.ArrayList;
 
@@ -43,11 +46,17 @@ public class UserAdapter extends BaseAdapter {
 
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
-        TextView userGender = convertView.findViewById(R.id.user_gender_tv);
+        Button userDetails = convertView.findViewById(R.id.user_details_btn);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
-        userGender.setText(user.getGender());
+        userDetails.setOnClickListener(v -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle("Details of User " + (position + 1))
+                    .setMessage(user.toString())
+                    .show();
+        });
+
 
         return convertView;
     }

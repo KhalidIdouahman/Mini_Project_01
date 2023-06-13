@@ -1,5 +1,7 @@
 package com.example.miniproject_01;
 
+import androidx.annotation.NonNull;
+
 public class UserModel {
     private String firstName;
     private String lastName;
@@ -32,5 +34,12 @@ public class UserModel {
 
     public String fullName() {
         return String.format("%s %s " , this.firstName , this.lastName.toUpperCase());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+       return String.format("Hello , I'm %s , I'm a %s .\nI live in %s . ", this.fullName() ,
+               this.gender.equals("male") ? "👨" : "👩" , this.city );
     }
 }

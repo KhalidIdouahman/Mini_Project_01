@@ -16,16 +16,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/user_gender_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="gender"
-        app:layout_constraintBottom_toBottomOf="@+id/user_city_tv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/user_full_name_tv" />
-
-    <TextView
         android:id="@+id/user_city_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,4 +26,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_full_name_tv" />
+
+    <Button
+        android:id="@+id/user_details_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="Details"
+        app:layout_constraintBottom_toBottomOf="@+id/user_city_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/user_full_name_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>
