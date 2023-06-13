@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class UserAdapter extends BaseAdapter {
     ArrayList<UserModel> usersList ;
     Context context;
-    private final int DURATION_OF_DOUBLE_CLICK = 250;
+    private final int MIN_DURATION_OF_LONG_CLICK = 1000;
+    private final int MAX_DURATION_OF_LONG_CLICK = 2000;
     public UserAdapter( Context context , ArrayList<UserModel> usersList) {
         this.usersList = usersList;
         this.context = context;
@@ -48,7 +49,6 @@ public class UserAdapter extends BaseAdapter {
 
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
-        ImageView userCheckImg = convertView.findViewById(R.id.user_check_im);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
@@ -68,9 +68,14 @@ public class UserAdapter extends BaseAdapter {
 //            }
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     long secondClick = System.currentTimeMillis();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-                    if ((secondClick - firstClick) <= DURATION_OF_DOUBLE_CLICK) {
-                       userCheckImg.setVisibility(userCheckImg.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
+                    if ((secondClick - firstClick) <= MAX_DURATION_OF_LONG_CLICK &&
+                            (secondClick - firstClick) >= MIN_DURATION_OF_LONG_CLICK) {
+                        alert.setTitle("Details of User " + (position + 1))
+                                .setMessage(user.toString())
+                                .show();
+
                     } else {
                         firstClick = secondClick;
                     }
