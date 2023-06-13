@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == bindingViews.loadBtn.getId()) {
             String data = getDataFromJson("users.json");
             ArrayList<UserModel> usersInfos = getUsers(data);
-            UserAdapter dataOfListView = new UserAdapter(this , usersInfos);
+            UserAdapter dataOfListView = new UserAdapter(this , usersInfos , getSupportFragmentManager());
             bindingViews.usersListView.setAdapter(dataOfListView);
         } else  {
             finish();

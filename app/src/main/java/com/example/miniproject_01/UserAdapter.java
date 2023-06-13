@@ -13,16 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 
 public class UserAdapter extends BaseAdapter {
     ArrayList<UserModel> usersList ;
     Context context;
+    FragmentManager fragmentManager;
     private final int DURATION_OF_DOUBLE_CLICK = 250;
-    public UserAdapter(Context context , ArrayList<UserModel> usersList) {
+    public UserAdapter(Context context , ArrayList<UserModel> usersList , FragmentManager fragmentManager) {
         this.usersList = usersList;
         this.context = context;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class UserAdapter extends BaseAdapter {
         TextView userFullName = convertView.findViewById(R.id.user_full_name_tv);
         TextView userCity = convertView.findViewById(R.id.user_city_tv);
         ImageView userCheckImg = convertView.findViewById(R.id.user_check_im);
+        Button userDetailsBtn = convertView.findViewById(R.id.user_details_btn);
 
         userFullName.setText(user.fullName());
         userCity.setText(user.getCity());
@@ -78,6 +82,11 @@ public class UserAdapter extends BaseAdapter {
                 }
                 return true;
             }
+        });
+
+        userDetailsBtn.setOnClickListener(v -> {
+            UserDetailsDialogFragment userDetails = new UserDetailsDialogFragment(user);
+            userDetails.show(fragmentManager , null);
         });
 
         return convertView;
