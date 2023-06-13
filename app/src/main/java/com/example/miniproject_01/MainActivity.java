@@ -38,9 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v.getId() == bindingViews.loadBtn.getId()) {
             String data = getDataFromJson("users.json");
-            ArrayList<String> usersNames = getUsersFullNames(data);
-            ArrayAdapter<String> dataOfListView = new ArrayAdapter<>(this ,
-                    android.R.layout.simple_list_item_1 , usersNames);
+            ArrayList<UserModel> usersInfos = getUsers(data);
+            UserAdapter dataOfListView = new UserAdapter(this , usersInfos);
             bindingViews.usersListView.setAdapter(dataOfListView);
         } else  {
             finish();
@@ -62,22 +61,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return contentOfFile.toString();
     }
 
-    public ArrayList<String> getUsersFullNames(String jsonContent) {
-        ArrayList<String> fullNamesList = new ArrayList<>();
+    public ArrayList<UserModel> getUsers(String jsonContent) {
+        ArrayList<UserModel> usersList = new ArrayList<>();
         try {
             JSONObject mainObj = new JSONObject(jsonContent);
             JSONArray users = mainObj.getJSONArray("users");
-            String fullName = "";
             for (int i = 0; i < users.length(); i++) {
                 JSONObject user = users.getJSONObject(i);
                 JSONObject name = user.getJSONObject("name");
-                fullName = String.format("%s %s " , name.get("first") , name.get("last"));
-                fullNamesList.add(fullName);
+                usersList.add(new UserModel(name.getString("first") , name.getString("last") , user.getString("gender"),
+                user.getString("city")));
             }
 //            Toast.makeText(this, fullName, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return fullNamesList;
+        return usersList;
     }
 }
