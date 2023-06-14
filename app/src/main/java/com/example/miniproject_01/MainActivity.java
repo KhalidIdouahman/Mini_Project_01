@@ -6,9 +6,12 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ActivityMainBinding bindingViews;
     View root;
     LoadingData asyncLoadingData;
-
+    ProgressBar progressBar;
+    RelativeLayout relativeLayout;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         root = bindingViews.getRoot();
         setContentView(root);
 
-        asyncLoadingData = new LoadingData();
 
         bindingViews.loadBtn.setOnClickListener(this);
         bindingViews.userSwipeTv.setOnTouchListener(new MyOnSwipeListener(this) {
@@ -48,34 +51,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 asyncLoadingData.cancel(true);
             }
         });
-        //region i try all the lines of code when the swipe didn't work
-        //        bindingViews.userSwipeTv.setOnClickListener(v -> {
-//            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
-//        });
-//        TextView swipe = findViewById(R.id.user_swipe_tv);
-//
-//        swipe.setOnTouchListener(new MyOnSwipeListener(this) {
-//            @Override
-//            public void swipeLeft() {
-//                Log.e("TAG", "onFling: ");
-//                Toast.makeText(MainActivity.this, "enter here", Toast.LENGTH_SHORT).show();
-//                finish();
-//            }
-//        });
-        //endregion
+
+//        to create and set the progress bar to wrap content width and height .
+        progressBar = new ProgressBar(this);
+        progressBar.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT));
+
+//        to define the parameters of the progress bar inside it's parent .
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+//        to create and set the relative layout to match parent width and height
+        relativeLayout = new RelativeLayout(this);
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT));
+
+//        adding the progress bar to the relative layout
+        relativeLayout.setGravity(Gravity.CENTER);
+        relativeLayout.addView(progressBar, layoutParams);
+
+//        adding the relative layout to the root view
+        bindingViews.getRoot().addView(relativeLayout);
+        relativeLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == bindingViews.loadBtn.getId()) {
-            ArrayList<UserModel> usersInfos = null;
-            try {
-                usersInfos = asyncLoadingData.execute("users.json").get();
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            UserAdapter dataOfListView = new UserAdapter(this, usersInfos);
-            bindingViews.usersListView.setAdapter(dataOfListView);
+//            i declare the object here because when i click again i crashes
+//            that means that it can't execute for many time in the same object , we should create a new obj everytime
+//            we click
+            asyncLoadingData = new LoadingData();
+            asyncLoadingData.execute("users.json");
         }
     }
 
@@ -87,10 +98,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.onPreExecute();
             bindingViews.loadBtn.setEnabled(false);
 
-            bar = new ProgressBar(MainActivity.this);
-            Toast.makeText(MainActivity.this, "onPreExecute", Toast.LENGTH_SHORT).show();
-            bar.setActivated(true);
-            bar.setVisibility(View.VISIBLE);
+            relativeLayout.setVisibility(View.VISIBLE);
+            // i do like this because when we click again the progress bar is visible and the list still contains the data
+//            from the first click on the load btn
+            bindingViews.usersListView.setVisibility(View.INVISIBLE);
         }
 
 
@@ -128,8 +139,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(ArrayList<UserModel> userModels) {
             super.onPostExecute(userModels);
 //            Toast.makeText(MainActivity.this, "onPostExecute", Toast.LENGTH_SHORT).show();
+            UserAdapter dataOfListView = new UserAdapter(MainActivity.this, userModels);
+            bindingViews.usersListView.setAdapter(dataOfListView);
             bindingViews.loadBtn.setEnabled(true);
-            bar.setVisibility(View.INVISIBLE);
+            relativeLayout.setVisibility(View.GONE);
+            bindingViews.usersListView.setVisibility(View.VISIBLE);
         }
 
         @Override
