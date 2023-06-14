@@ -7,6 +7,8 @@ public class UserModel {
     private String lastName;
     private String gender;
     private String city;
+    private String image;
+
 
     public String getFirstName() {
         return firstName;
@@ -24,12 +26,16 @@ public class UserModel {
         return city;
     }
 
+    public String getImage() {
+        return image;
+    }
 
-    public UserModel(String firstName, String lastName, String gender, String city) {
+    public UserModel(String firstName, String lastName, String gender, String city , String image) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.city = city;
+        this.image = image;
     }
 
     public String fullName() {
